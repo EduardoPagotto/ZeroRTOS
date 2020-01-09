@@ -36,14 +36,14 @@ void vTecladoTask(void) {
     if (digitalRead(BOTAO1))
         flagBotao1 = 1;
     if (!digitalRead(BOTAO1) && flagBotao1) {
-        botao1FoiPressionado ^= SIM;
+        botao1FoiPressionado ^= true;
         flagBotao1 = 0;
     }
 
     if (digitalRead(BOTAO2))
         flagBotao2 = 2;
     if (!digitalRead(BOTAO2) && flagBotao2) {
-        botao2FoiPressionado ^= SIM;
+        botao2FoiPressionado ^= true;
         flagBotao2 = 0;
     }
 }
@@ -61,7 +61,7 @@ void vDisp7SegTask() {
         previousCounter = sysTickCounter; // Salva o tempo atual
 
         // Muda o sentido da contagem
-        if (botao2FoiPressionado == SIM)
+        if (botao2FoiPressionado == true)
             valor--;
         else
             valor++;
@@ -87,7 +87,7 @@ void vDisp7SegTask() {
 void vDispLcdTask(void) {
     static int count = 0;
 
-    if (botao1FoiPressionado == SIM)
+    if (botao1FoiPressionado == true)
         count--;
     else
         count++;
@@ -117,8 +117,8 @@ void setup() {
     // Inicialização da Serial
     Serial.begin(9600);
 
-    botao1FoiPressionado = NAO;
-    botao2FoiPressionado = NAO;
+    botao1FoiPressionado = false;
+    botao2FoiPressionado = false;
 
     TaskHandle task1;
     TaskHandle task2;
@@ -129,13 +129,13 @@ void setup() {
     KernelInit(); // Inicializa o kernel
     // Adicionando as tarefas
     KernelAddTask(vDisp7SegTask, // Função correspondente a tarefa
-                  NULL,          // Nome da tarefa (opcional)
+                  nullptr,          // Nome da tarefa (opcional)
                   TASK1_PERIOD,  // Periodo da tarefa
-                  SIM,           // Tarefa habilitada
+                  true,          // Tarefa habilitada
                   &task1);       // Estrutura da tarefa
 
-    KernelAddTask(vTecladoTask, NULL, TASK2_PERIOD, SIM, &task2);
-    KernelAddTask(vDispLcdTask, NULL, TASK3_PERIOD, SIM, &task3);
+    KernelAddTask(vTecladoTask, nullptr, TASK2_PERIOD, true, &task2);
+    KernelAddTask(vDispLcdTask, nullptr, TASK3_PERIOD, true, &task3);
     KernelStart(); // Executa o kernel
 }
 

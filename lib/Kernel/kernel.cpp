@@ -17,26 +17,27 @@
 #include <TimerOne.h> // Inclui a biblioteca do timer 1
 
 // Definição do buffer para armazenar as tarefas
-TaskHandle* buffer[NUMBER_OF_TASKS];
+TaskHandle* buffer[TASKS_SIZE];
 
 // Variáveis do kernel
-volatile uint32_t taskCounter[NUMBER_OF_TASKS];
-volatile int16_t TempoEmExecucao;
+volatile uint32_t taskCounter[TASKS_SIZE];
 volatile uint32_t sysTickCounter;
-volatile bool TemporizadorEstourou;
-volatile bool TarefaSendoExecutada;
+volatile int16_t runTime;
+volatile bool timerOverrun;
+volatile bool taskRunning;
 
 /**
  * @brief Inicializa as variáveis utilizadas pelo kernel, e o temporizador resposável pelo tick
- * @return char
+ *
+ * @return uint8_t
  */
-char KernelInit() {
+uint8_t KernelInit() {
     memset(buffer, 0, sizeof(buffer)); // Inicializa o buffer para funções
     memset((void*)taskCounter, 0, sizeof(taskCounter));
 
     sysTickCounter = 0;
-    TemporizadorEstourou = NAO;
-    TarefaSendoExecutada = NAO;
+    timerOverrun = false;
+    taskRunning = false;
 
     // Base de tempo para o escalonador
     Timer1.initialize(1000);          // 1ms
@@ -49,14 +50,14 @@ char KernelInit() {
  * @brief Adiciona uma nova Tarefa ao pool
  *
  * @param _function ponteiro da funcao
- * @param _nameFunction nome da funcao para debug (opcional NULL)
+ * @param _nameFunction nome da funcao para debug (opcional nullptr)
  * @param _period tempo maximo
  * @param _enableTask inicia
  * @param task handle da task
- * @return char
+ * @return uint8_t
  */
-char KernelAddTask(ptrFunc _function, unsigned char* _nameFunction, uint16_t _period, char _enableTask,
-                   TaskHandle* task) {
+uint8_t KernelAddTask(ptrFunc _function, unsigned char* _nameFunction, uint16_t _period, bool _enableTask,
+                      TaskHandle* task) {
     int i;
 
     task->Function = _function;
@@ -65,13 +66,13 @@ char KernelAddTask(ptrFunc _function, unsigned char* _nameFunction, uint16_t _pe
     task->enableTask = _enableTask;
 
     // Verifica se já existe a tarefa no buffer
-    for (i = 0; i < NUMBER_OF_TASKS; i++) {
-        if ((buffer[i] != NULL) && (buffer[i] == task))
+    for (i = 0; i < TASKS_SIZE; i++) {
+        if ((buffer[i] != nullptr) && (buffer[i] == task))
             return SUCCESS;
     }
 
     // Adiciona a tarefa em um slot vazio
-    for (i = 0; i < NUMBER_OF_TASKS; i++) {
+    for (i = 0; i < TASKS_SIZE; i++) {
         if (!buffer[i]) {
             buffer[i] = task;
             return SUCCESS;
@@ -81,16 +82,16 @@ char KernelAddTask(ptrFunc _function, unsigned char* _nameFunction, uint16_t _pe
 }
 
 /**
- * @brief de forma contrária a função KernelAddTask, esta função remove uma Tarefa do buffer circular
+ * @brief Contrária a função KernelAddTask, esta função remove uma Tarefa do buffer circular
  *
  * @param task handle da task
- * @return char
+ * @return uint8_t
  */
-char KernelRemoveTask(TaskHandle* task) {
+uint8_t KernelRemoveTask(TaskHandle* task) {
     int i;
-    for (i = 0; i < NUMBER_OF_TASKS; i++) {
+    for (i = 0; i < TASKS_SIZE; i++) {
         if (buffer[i] == task) {
-            buffer[i] = NULL;
+            buffer[i] = nullptr;
             return SUCCESS;
         }
     }
@@ -105,19 +106,19 @@ void KernelStart() {
     int i;
 
     for (;;) {
-        if (TemporizadorEstourou == SIM) {
-            for (i = 0; i < NUMBER_OF_TASKS; i++) {
+        if (timerOverrun == true) {
+            for (i = 0; i < TASKS_SIZE; i++) {
                 if (buffer[i] != 0) {
-                    if (((sysTickCounter - taskCounter[i]) > buffer[i]->period) && (buffer[i]->enableTask == SIM)) {
-                        TarefaSendoExecutada = SIM;
-                        TempoEmExecucao = TEMPO_MAXIMO_EXECUCAO;
+                    if (((sysTickCounter - taskCounter[i]) > buffer[i]->period) && (buffer[i]->enableTask == true)) {
+                        taskRunning = true;
+                        runTime = RUN_MAX_TIME;
                         buffer[i]->Function();
-                        TarefaSendoExecutada = NAO;
+                        taskRunning = false;
                         taskCounter[i] = sysTickCounter;
                     }
                 }
             }
-            TemporizadorEstourou = NAO;
+            timerOverrun = false;
         }
     }
 }
@@ -130,13 +131,13 @@ void KernelStart() {
  *
  */
 void IsrTimer() {
-    TemporizadorEstourou = SIM;
+    timerOverrun = true;
     sysTickCounter++;
 
     // Conta o tempo em que uma tarefa está em execução
-    if (TarefaSendoExecutada == SIM) {
-        TempoEmExecucao--;
-        if (!TempoEmExecucao) {
+    if (taskRunning == true) {
+        runTime--;
+        if (!runTime) {
             // possivelmente a tarefa travou, então, ativa o WDT para reiniciar o micro
             wdt_enable(WDTO_15MS);
             while (1)

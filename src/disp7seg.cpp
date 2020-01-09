@@ -11,7 +11,7 @@
 
 #include "disp7seg.h"
 
-unsigned char DDRA, PORTA;
+uint8_t DDRA, PORTA;
 
 /**
  * @brief  Inicializa os pinos utilizados para o controle do display
@@ -30,11 +30,11 @@ void vDisp7SegInit() {
 /**
  * @brief Encontra o códico correspondente ao digito a ser enviado para o Display
  * @param num Digito a ser enviado para o Display
- * @return unsigned char Código correspondente ao digito desejado em hexadecimal
+ * @return uint8_t Código correspondente ao digito desejado em hexadecimal
  */
-unsigned char ucDisplay(char num) {
+uint8_t ucDisplay(uint8_t num) {
     // o vetor segmentos representa em hexadecimal os digitos de 0 a 9 correspondentes ao Display de 7 segmentos
-    unsigned char segmentos[] = {
+    uint8_t segmentos[] = {
         0x3F, // 0
         0x06, // 1
         0x5B, // 2
@@ -60,10 +60,10 @@ unsigned char ucDisplay(char num) {
  *
  * @param valor Valor inteiro a ser mostrado
  * @param disp qual dos 4 displays
- * @return unsigned char digito a ser enviado para o display
+ * @return uint8_t digito a ser enviado para o display
  */
-unsigned char ucObtemValorDisplay(int16_t valor, char disp) {
-    unsigned char digito;
+uint8_t ucObtemValorDisplay(int16_t valor, char disp) {
+    uint8_t digito;
 
     switch (disp) {
         case 1:
@@ -88,7 +88,7 @@ unsigned char ucObtemValorDisplay(int16_t valor, char disp) {
  * @param valor Valor a ser mostrado
  * @param disp qual display
  */
-void vEscreveNoDisplay(unsigned char valor, char disp) {
+void vEscreveNoDisplay(uint8_t valor, char disp) {
     // Maquina de Estados para a atualização do Display
     switch (disp) {
         case ESCREVE_DISPLAY_1: {

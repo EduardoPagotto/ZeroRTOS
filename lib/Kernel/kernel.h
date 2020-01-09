@@ -15,33 +15,31 @@
 #include <Arduino.h>
 
 // Definições para as tarefas
-#define NUMBER_OF_TASKS 3
-#define TEMPO_MAXIMO_EXECUCAO 100 // 100ms
+#define TASKS_SIZE 3
+#define RUN_MAX_TIME 100 // 100ms
 
 // Definições gerais
 #define SUCCESS 1
 #define FAIL 0
-#define SIM true
-#define NAO false
 
 // Definição ponteiro de função
-typedef void (*ptrFunc)();
+typedef void (*ptrFunc)(void);
 
 // Definição da estrutura que contem as informações das tarefas
 typedef struct {
     ptrFunc Function;
     unsigned char* taskName;
-    uint32_t period;
+    uint16_t period;
     bool enableTask;
 } TaskHandle;
 
 // Globais
 extern volatile uint32_t sysTickCounter;
 
-char KernelInit(void);
-char KernelAddTask(ptrFunc _function, unsigned char* _nameFunction, uint16_t _period, char _enableTask,
-                   TaskHandle* task);
-char KernelRemoveTask(TaskHandle* task);
+uint8_t KernelInit(void);
+uint8_t KernelAddTask(ptrFunc _function, unsigned char* _nameFunction, uint16_t _period, bool _enableTask,
+                      TaskHandle* task);
+uint8_t KernelRemoveTask(TaskHandle* task);
 void KernelStart(void);
 void IsrTimer(void);
 

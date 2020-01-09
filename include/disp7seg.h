@@ -29,7 +29,7 @@
 
 // Protótipos de funções
 void vDisp7SegInit(void);
-unsigned char ucObtemValorDisplay(int16_t valor, char disp);
-void vEscreveNoDisplay(unsigned char valor, char disp);
+uint8_t ucObtemValorDisplay(int16_t valor, char disp);
+void vEscreveNoDisplay(uint8_t valor, char disp);
 
 #endif
