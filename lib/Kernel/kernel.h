@@ -23,11 +23,12 @@
 #define FAIL 0
 
 // Definição ponteiro de função
-typedef void (*ptrFunc)(void);
+typedef void (*func_ptr)(void); // C
+// typedef void (*func_ptr)(); // C++
 
 // Definição da estrutura que contem as informações das tarefas
 typedef struct {
-    ptrFunc Function;
+    func_ptr Function;
     unsigned char* taskName;
     uint16_t period;
     bool enableTask;
@@ -37,7 +38,7 @@ typedef struct {
 extern volatile uint32_t sysTickCounter;
 
 uint8_t KernelInit(void);
-uint8_t KernelAddTask(ptrFunc _function, unsigned char* _nameFunction, uint16_t _period, bool _enableTask,
+uint8_t KernelAddTask(func_ptr _function, unsigned char* _nameFunction, uint16_t _period, bool _enableTask,
                       TaskHandle* task);
 uint8_t KernelRemoveTask(TaskHandle* task);
 void KernelStart(void);

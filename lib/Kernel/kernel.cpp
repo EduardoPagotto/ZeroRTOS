@@ -56,7 +56,7 @@ uint8_t KernelInit() {
  * @param task handle da task
  * @return uint8_t
  */
-uint8_t KernelAddTask(ptrFunc _function, unsigned char* _nameFunction, uint16_t _period, bool _enableTask,
+uint8_t KernelAddTask(func_ptr _function, unsigned char* _nameFunction, uint16_t _period, bool _enableTask,
                       TaskHandle* task) {
     int i;
 
