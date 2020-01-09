@@ -1,5 +1,11 @@
 {
     "files.associations": {
         "arduino.h": "c"
-    }
+    },
+    "editor.formatOnSave": true,
+    "editor.minimap.enabled": false,
+    "C_Cpp.intelliSenseEngineFallback": "Enabled",
+    "C_Cpp.configurationWarnings": "Disabled",
+    "C_Cpp.intelliSenseEngine": "Tag Parser",
+    "C_Cpp.clang_format_path": "/usr/bin/clang-format"
 }

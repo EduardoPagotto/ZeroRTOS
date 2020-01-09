@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include <kernel.h>
-#include <disp7seg.h>
 #include <LiquidCrystal.h>
+#include <disp7seg.h>
+#include <kernel.h>
 
 #define LED1 13
 #define BOTAO1 2
@@ -125,9 +125,8 @@ void setup() {
     KernelAddTask(vTecladoTask, NULL, TASK2_PERIOD, SIM, &task2);
     KernelAddTask(vDispLcdTask, NULL, TASK3_PERIOD, SIM, &task3);
     KernelStart(); // Executa o kernel
-
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+    // put your main code here, to run repeatedly:
 }

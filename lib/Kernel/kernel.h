@@ -29,7 +29,7 @@
 #define NAO false
 
 // Definição ponteiro de função
-typedef void (*ptrFunc)(); 
+typedef void (*ptrFunc)();
 
 // Definição da estrutura que contem as informações das tarefas
 typedef struct {

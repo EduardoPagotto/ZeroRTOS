@@ -1,4 +1,4 @@
-/* 
+/*
     @kernel.cpp
 
     Gerenciador de tarefas baseado num kernel cooperativo (não preemptivo)
@@ -12,8 +12,8 @@
     VVersão: 0.0.0
 */
 
-#include "avr/wdt.h"
 #include "kernel.h"
+#include "avr/wdt.h"
 #include <TimerOne.h> // Inclui a biblioteca do timer 1
 
 // Definição do buffer para armazenar as tarefas
@@ -88,8 +88,7 @@ char KernelRemoveTask(TaskHandle* task) {
         }
     }
     return FAIL;
-
-} 
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 // Função KernelStart()
@@ -116,7 +115,7 @@ void KernelStart() {
             TemporizadorEstourou = NAO;
         }
     }
-} 
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 // Trata a Interrupção do timer 1
