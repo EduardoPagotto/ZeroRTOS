@@ -1,3 +1,12 @@
+/**
+ * @file main.cpp
+ * @author Eduardo Pagotto (edupagotto@gmail.com)
+ * @brief Entry Point aplicação
+ * @version 0.1
+ * @date 2020-01-09
+ * @copyright Copyright (c) 2020
+ */
+
 #include <Arduino.h>
 #include <LiquidCrystal.h>
 #include <disp7seg.h>
@@ -13,14 +22,14 @@
 
 #define TIME_INTERVAL 500
 
-boolean botao1FoiPressionado, botao2FoiPressionado;
+bool botao1FoiPressionado, botao2FoiPressionado;
 
 // Objeto para a biblioteca do display lcd
 LiquidCrystal lcd(52, 53, 51, 49, 47, 45); // Criando um LCD de 16x2
 
-//---------------------------------------------------------------------------------------------------------------------
-// vDispLcdTask(): escreve no display LCD o valor de um contador sempre que é executada
-//---------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief escreve no display LCD o valor de um contador sempre que é executada
+ */
 void vTecladoTask(void) {
     static char flagBotao1 = 0, flagBotao2 = 0;
 
@@ -39,9 +48,9 @@ void vTecladoTask(void) {
     }
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-// vDispLcdTask(): escreve no display LCD o valor de um contador sempre que é executada
-//---------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief escreve no display LCD o valor de um contador sempre que é executada
+ */
 void vDisp7SegTask() {
     static char disp = 1;
     static uint32_t previousCounter = 0;
@@ -72,9 +81,9 @@ void vDisp7SegTask() {
     disp++;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-// vDispLcdTask(): escreve no display LCD o valor de um contador sempre que é executada
-//---------------------------------------------------------------------------------------------------------------------
+/**
+ * @brief escreve no display LCD o valor de um contador sempre que é executada
+ */
 void vDispLcdTask(void) {
     static int count = 0;
 
@@ -96,6 +105,9 @@ void vDispLcdTask(void) {
 
 } // end Task2
 
+/**
+ * @brief setup point
+ */
 void setup() {
     // Inicializaçãos dos pinos IO
     pinMode(LED1, OUTPUT);
@@ -127,6 +139,9 @@ void setup() {
     KernelStart(); // Executa o kernel
 }
 
+/**
+ * @brief loop
+ */
 void loop() {
     // put your main code here, to run repeatedly:
 }

@@ -1,13 +1,22 @@
+/**
+ * @file disp7seg.cpp
+ * @author Eduardo Pagotto (edupagotto@gmail.com)
+ * @brief Controlador do display de 7 segmentos
+ * @version 0.1
+ * @date 2020-01-09
+ *
+ * @copyright Copyright (c) 2020
+ *
+ */
 
 #include "disp7seg.h"
 
 unsigned char DDRA, PORTA;
 
-// Função vDisp7SegInit(): Inicializa os pinos utilizados para o controle do display
-// Parâmetros: nenhum
-// Saída: nenhuma
+/**
+ * @brief  Inicializa os pinos utilizados para o controle do display
+ */
 void vDisp7SegInit() {
-
     // Configura os pinos de controle dos displays 7 segmentos com saída digital
     pinMode(DISPLAY_1, OUTPUT);
     pinMode(DISPLAY_2, OUTPUT);
@@ -18,9 +27,11 @@ void vDisp7SegInit() {
     PORTA = 0xFF; // Inicializa todos os pinos do PORTA em nível alto
 }
 
-// Função ucDisplay(): Encontra o códico correspondente ao digito a ser enviado para o Display
-// Parâmetros: Digito a ser enviado para o Display
-// Saída: Código correspondente ao digito desejado em hexadecimal
+/**
+ * @brief Encontra o códico correspondente ao digito a ser enviado para o Display
+ * @param num Digito a ser enviado para o Display
+ * @return unsigned char Código correspondente ao digito desejado em hexadecimal
+ */
 unsigned char ucDisplay(char num) {
     // o vetor segmentos representa em hexadecimal os digitos de 0 a 9 correspondentes ao Display de 7 segmentos
     unsigned char segmentos[] = {
@@ -42,12 +53,15 @@ unsigned char ucDisplay(char num) {
 #else
     return ~segmentos[num];
 #endif
+}
 
-} // end Display
-
-// Função ucObtemValorDisplay(): Calcula o digito a ser mostrado em cada display
-// Parâmetros: Valor inteiro a ser mostrado; qual dos 4 displays
-// Saída: digito a ser enviado para o display
+/**
+ * @brief Calcula o digito a ser mostrado em cada display
+ *
+ * @param valor Valor inteiro a ser mostrado
+ * @param disp qual dos 4 displays
+ * @return unsigned char digito a ser enviado para o display
+ */
 unsigned char ucObtemValorDisplay(int16_t valor, char disp) {
     unsigned char digito;
 
@@ -66,11 +80,14 @@ unsigned char ucObtemValorDisplay(int16_t valor, char disp) {
             break;
     }
     return digito;
-} // end ucObtemValorDisplay
+}
 
-// Função vEscreveNoDisplay(): Faz a multiplexação dos displays
-// Parâmetros: Valor a ser mostrado, e qual display
-// Saída: Nenhuma
+/**
+ * @brief Faz a multiplexação dos displays
+ *
+ * @param valor Valor a ser mostrado
+ * @param disp qual display
+ */
 void vEscreveNoDisplay(unsigned char valor, char disp) {
     // Maquina de Estados para a atualização do Display
     switch (disp) {

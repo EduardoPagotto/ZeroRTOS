@@ -14,10 +14,6 @@
 
 #include <Arduino.h>
 
-//---------------------------------------------------------------------------------------------------------------
-// Definicioe do Kernel
-//---------------------------------------------------------------------------------------------------------------
-
 // Definições para as tarefas
 #define NUMBER_OF_TASKS 3
 #define TEMPO_MAXIMO_EXECUCAO 100 // 100ms
@@ -39,11 +35,9 @@ typedef struct {
     bool enableTask;
 } TaskHandle;
 
+// Globais
 extern volatile uint32_t sysTickCounter;
 
-//---------------------------------------------------------------------------------------------------------------
-// Protótipos de funções do Kernel
-//---------------------------------------------------------------------------------------------------------------
 char KernelInit(void);
 char KernelAddTask(ptrFunc _function, unsigned char* _nameFunction, uint16_t _period, char _enableTask,
                    TaskHandle* task);
